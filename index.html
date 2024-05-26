@@ -18,14 +18,13 @@
     @media (prefers-color-scheme: dark) {
         body {
             --background-color: #282727; /* Dark mode background color */
-            --cell-background-color: #ffffff; /* Dark mode cell color */
-            --text-color: #282727; /* Dark mode text color */
+            --cell-background-color: #404040; /* Dark mode cell color */
+            --text-color: #ffffff; /* Dark mode text color */
         }
     }
 
     h1 {
         margin-bottom: 20px;
-        color: ivory;
     }
 
     #board {
@@ -51,13 +50,12 @@
     }
 
     .cell:hover {
-        background-color: #f0f0f0;
+        background-color: var(--hover-background-color);
     }
 
     #message {
         font-size: 24px;
         margin-bottom: 20px;
-        color: var(--text-color);
     }
 
     #reset {
@@ -75,19 +73,32 @@
         background-color: #464646;
     }
 
-    #message {
-        color: ivory;
+    #share {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.4s ease;
+    }
+
+    #share:hover {
+        background-color: #0056b3;
     }
 </style>
 </head>
 <body>
-    <h1>Tic-Tac-Toe</h1>
+    <h1>🎮 Tic-Tac-Toe 🎮</h1>
     <div id="board"></div>
-    <div id="message"></div>
-    <button id="reset"> Reset Game</button>
+    <div id="message">❌ It's your turn!</div>
+    <button id="reset">🔄 Reset Game</button>
+    <button id="share">🔗 Share Game</button>
 
     <script>
-        let currentPlayer = 'X';
+        let currentPlayer = '❌';
         let board = ['', '', '', '', '', '', '', '', ''];
         let gameWon = false;
         const winningCombos = [
@@ -108,6 +119,9 @@
         const resetButton = document.getElementById('reset');
         resetButton.addEventListener('click', resetGame);
 
+        const shareButton = document.getElementById('share');
+        shareButton.addEventListener('click', shareGame);
+
         function handleCellClick(event) {
             if (!gameWon) {
                 const cellIndex = event.target.dataset.index;
@@ -116,11 +130,11 @@
                     event.target.textContent = currentPlayer;
                     if (checkWinner(currentPlayer)) {
                         gameWon = true;
-                        displayMessage(` ${currentPlayer} wins! `);
+                        displayMessage(`🎉 ${currentPlayer} wins! 🎉`);
                     } else if (board.every(cell => cell !== '')) {
-                        displayMessage(" It's a draw!");
+                        displayMessage("🤝 It's a draw!");
                     } else {
-                        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                        currentPlayer = currentPlayer === '❌' ? '⭕' : '❌';
                         displayMessage(`${currentPlayer} It's your turn!`);
                     }
                 }
@@ -139,14 +153,21 @@
         }
 
         function resetGame() {
-            board = ['', '', '', '', '', '', '', '', ''];
-            currentPlayer = 'X';
+            board.fill('');
+            currentPlayer = '❌';
             gameWon = false;
             const cells = document.querySelectorAll('.cell');
             cells.forEach(cell => {
                 cell.textContent = '';
             });
             displayMessage(`${currentPlayer} It's your turn!`);
+        }
+
+        function shareGame() {
+            const winnerMessage = document.getElementById('message').textContent;
+            const encodedMessage = encodeURIComponent(winnerMessage);
+            const shareUrl = `${window.location.origin}${window.location.pathname}?message=${encodedMessage}`;
+            prompt("Copy this URL to share the game result:", shareUrl);
         }
     </script>
 </body>

@@ -81,13 +81,13 @@
 </style>
 </head>
 <body>
-    <h1>🎮Tic-Tac-Toe🎮</h1>
+    <h1>Tic-Tac-Toe</h1>
     <div id="board"></div>
     <div id="message"></div>
-    <button id="reset">🔄 Reset Game</button>
+    <button id="reset"> Reset Game</button>
 
     <script>
-        let currentPlayer = '❌';
+        let currentPlayer = 'X';
         let board = ['', '', '', '', '', '', '', '', ''];
         let gameWon = false;
         const winningCombos = [
@@ -116,11 +116,11 @@
                     event.target.textContent = currentPlayer;
                     if (checkWinner(currentPlayer)) {
                         gameWon = true;
-                        displayMessage(`🎉 ${currentPlayer} wins! 🎉`);
+                        displayMessage(` ${currentPlayer} wins! `);
                     } else if (board.every(cell => cell !== '')) {
-                        displayMessage("🤝 It's a draw!");
+                        displayMessage(" It's a draw!");
                     } else {
-                        currentPlayer = currentPlayer === '❌' ? '⭕️' : '❌';
+                        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
                         displayMessage(`${currentPlayer} It's your turn!`);
                     }
                 }
@@ -140,7 +140,7 @@
 
         function resetGame() {
             board = ['', '', '', '', '', '', '', '', ''];
-            currentPlayer = '❌';
+            currentPlayer = 'X';
             gameWon = false;
             const cells = document.querySelectorAll('.cell');
             cells.forEach(cell => {

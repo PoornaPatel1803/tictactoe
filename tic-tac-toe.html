@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tic-Tac-Toe</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        --background-color: #ffffff; /* Light mode background color */
+        --cell-background-color: #808080; /* Light mode cell color */
+        --text-color: #000000; /* Light mode text color */
+        background-color: var(--background-color);
+        color: var(--text-color);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        body {
+            --background-color: #282727; /* Dark mode background color */
+            --cell-background-color: #ffffff; /* Dark mode cell color */
+            --text-color: #282727; /* Dark mode text color */
+        }
+    }
+
+    h1 {
+        margin-bottom: 20px;
+        color: ivory;
+    }
+
+    #board {
+        display: grid;
+        grid-template-columns: repeat(3, 100px);
+        grid-gap: 4px;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .cell {
+        width: 100px;
+        height: 100px;
+        border: 2px solid var(--text-color);
+        font-size: 48px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--cell-background-color);
+        color: var(--text-color);
+    }
+
+    .cell:hover {
+        background-color: #f0f0f0;
+    }
+
+    #message {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: var(--text-color);
+    }
+
+    #reset {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #000000;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.4s ease;
+    }
+
+    #reset:hover {
+        background-color: #464646;
+    }
+
+    #message {
+        color: ivory;
+    }
+</style>
+</head>
+<body>
+    <h1>🎮Tic-Tac-Toe🎮</h1>
+    <div id="board"></div>
+    <div id="message"></div>
+    <button id="reset">🔄 Reset Game</button>
+
+    <script>
+        let currentPlayer = '❌';
+        let board = ['', '', '', '', '', '', '', '', ''];
+        let gameWon = false;
+        const winningCombos = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [2, 4, 6]
+        ];
+
+        const boardElement = document.getElementById('board');
+        for (let i = 0; i < 9; i++) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            cell.dataset.index = i;
+            cell.addEventListener('click', handleCellClick);
+            boardElement.appendChild(cell);
+        }
+
+        const resetButton = document.getElementById('reset');
+        resetButton.addEventListener('click', resetGame);
+
+        function handleCellClick(event) {
+            if (!gameWon) {
+                const cellIndex = event.target.dataset.index;
+                if (board[cellIndex] === '') {
+                    board[cellIndex] = currentPlayer;
+                    event.target.textContent = currentPlayer;
+                    if (checkWinner(currentPlayer)) {
+                        gameWon = true;
+                        displayMessage(`🎉 ${currentPlayer} wins! 🎉`);
+                    } else if (board.every(cell => cell !== '')) {
+                        displayMessage("🤝 It's a draw!");
+                    } else {
+                        currentPlayer = currentPlayer === '❌' ? '⭕️' : '❌';
+                        displayMessage(`${currentPlayer} It's your turn!`);
+                    }
+                }
+            }
+        }
+
+        function checkWinner(player) {
+            return winningCombos.some(combo => {
+                return combo.every(index => board[index] === player);
+            });
+        }
+
+        function displayMessage(message) {
+            const messageElement = document.getElementById('message');
+            messageElement.textContent = message;
+        }
+
+        function resetGame() {
+            board = ['', '', '', '', '', '', '', '', ''];
+            currentPlayer = '❌';
+            gameWon = false;
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => {
+                cell.textContent = '';
+            });
+            displayMessage(`${currentPlayer} It's your turn!`);
+        }
+    </script>
+</body>
+</html>
